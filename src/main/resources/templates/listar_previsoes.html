@@ -19,8 +19,11 @@
 						<th>Dia da semana</th>
 						<th>Temp. mínima</th>
 						<th>Temp. máxima</th>
-						<th>Umidade relativa</th>
+						<th>Humidade relativa</th>
 						<th>Descrição</th>
+						<th>Cidade</th>
+						<th>Latitude</th>
+						<th>Longitude</th>
 					</tr>
 					
 				</thead>
@@ -31,7 +34,9 @@
 						<td th:text="${previsao.temperaturaMaxima}"></td>
 						<td th:text="${previsao.umidadeRelativa}"></td>
 						<td th:text="${previsao.descricao}"></td>
-
+						<td th:text="${previsao.Cidade.nome}"></td>
+						<td th:text="${previsao.Cidade.latitude}"></td>
+						<td th:text="${previsao.Cidade.longitude}"></td>
 					</tr>
 				</tbody>
 			</table>
