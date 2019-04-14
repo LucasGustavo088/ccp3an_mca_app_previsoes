@@ -21,6 +21,8 @@ public class Previsao implements Serializable {
 	private double temperaturaMaxima;
 	private double humidadeRelativa;
 	private String descricao;
+	private double latitude;
+	private double longitude;
 
 	public Long getId() {
 		return id;
@@ -68,6 +70,22 @@ public class Previsao implements Serializable {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
 }
