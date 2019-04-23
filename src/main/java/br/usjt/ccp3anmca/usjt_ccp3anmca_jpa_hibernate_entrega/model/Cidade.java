@@ -7,6 +7,16 @@ import javax.persistence.Id;
 
 @Entity
 (name = "cidade")
+@Entity
+(name = "cidade")
+@NamedQuery (name = "Cidade.buscarPelaLatitudeELongitude",
+query = "SELECT a FROM Cidade a WHERE latitude = :latitude AND longitude = :longitude")
+
+@NamedQuery (name = "Cidade.buscarCidadePeloNome",
+query = "SELECT a FROM Cidade a WHERE nome = :nome")
+
+@NamedQuery (name = "Cidade.buscarCidadesPeloNome",
+query = "SELECT a FROM Cidade a WHERE nome LIKE (%:nome%)")
 public class Cidade {
 	
 	@Id
