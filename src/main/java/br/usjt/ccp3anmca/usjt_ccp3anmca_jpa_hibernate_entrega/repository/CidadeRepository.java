@@ -1,14 +1,46 @@
-package br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.repository;
+package br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.model;
 
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+@Entity
+(name = "cidade")
+@NamedQuery (name = "Cidade.buscarPelaLatitudeELongitude",
+query = "SELECT a FROM Cidade a WHERE latitude = :latitude AND longitude = :longitude")
 
-import br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.model.Cidade;
-import br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.model.Previsao;
+@NamedQuery (name = "Cidade.buscarCidadePeloNome",
+query = "SELECT a FROM Cidade a WHERE nome = :nome")
 
-public interface CidadeRepository extends JpaRepository<Previsao, Long>{
-	public Cidade findByLatitudeAndLongitude(double latitude, double longitude);
-	public Cidade findByNome(String nome);
-	public List <Cidade> findByNomeInIgnoreCase(String nome);
+@NamedQuery (name = "Cidade.buscarCidadesPeloNome",
+query = "SELECT a FROM Cidade a WHERE nome LIKE (%:nome%)")
+
+public class Cidade {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	public String nome;
+	private double latitude;
+	private double longitude;
+	
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	
 }
