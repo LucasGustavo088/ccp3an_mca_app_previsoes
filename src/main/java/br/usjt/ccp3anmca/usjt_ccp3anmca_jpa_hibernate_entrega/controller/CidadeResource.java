@@ -1,47 +1,56 @@
-package br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.controller;
+package br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.resources;
 
+import java.net.URI;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.Service.PrevisaoService;
-import br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.model.Previsao;
+import br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.model.Cidade;
+import br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.repository.CidadeRepository;
 
-@Controller
+
+@RestController
+@RequestMapping("/cidade")
 public class CidadeResource {
 
 	@Autowired
-	PrevisaoService cidadeService;
+	private CidadeRepository cidadeRepo;
+
+
+	@GetMapping("/lista")
+	public List<Cidade> todasAsCidades(){
+		return cidadeRepo.findAll();
+	}
 	
-  @Autowired
-  private CidadeRepository cidadeRepo;
+	@GetMapping("/obtemCidadeEsp/{nome}")
+	public Cidade obtemCidadeEsp(@PathVariable String nome){
+		return cidadeRepo.findByPrimeiraLetra(nome);
+	}
+	
+	
+	@GetMapping("/obtemLatitudeLongitude/{latitude}/{longitude}")
+	public Cidade obtemLatitudeLongitude(@PathVariable String latitude, @PathVariable String longitude) {
+		return cidadeRepo.findByLatitudeAndLongitudeExp(latitude, longitude);
+	}
 
-  
-	@GetMapping ("/lista")
-  public List <Cidade> todasAsCidades (){
-    return cidadeRepo.findAll();
-  }
-  
-  @PostMapping ("/salvar")
-  public void salvar ( @RequestBody Cidade cidade) {
-    cidadeRepo.save(cidade);
-  }
-  
-  @PostMapping ("/salvar")
-  //@ResponseStatus (HttpStatus.CREATED) agora desnecessária
-  public ResponseEntity<Livro> salvar ( @RequestBody Livro livro, HttpServletResponse
-   response) {
-    Livro l = livroRepo.save(livro);
-    URI uri = ServletUriComponentsBuilder.fromCurrentServletMapping().path("/{id}").
-    buildAndExpand(l.getId()).toUri();
-    //desnecessário também
-    //response.setHeader("Location", uri.toASCIIString());
-    return ResponseEntity.created(uri).body(l);
-  }
-
+	@PostMapping ("/salvar")
+	public ResponseEntity<Cidade> salvar ( @RequestBody Cidade cidade, HttpServletResponse
+			response) {
+		Cidade c = cidadeRepo.save(cidade);
+		URI uri = ServletUriComponentsBuilder.
+				fromCurrentServletMapping().path("/{id}").buildAndExpand(c.getId()).toUri();
+		return ResponseEntity.created(uri).body(c);
+	}
 
 
 }
