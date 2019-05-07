@@ -1,46 +1,66 @@
-package br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.model;
+package br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.repository;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
+import java.util.List;
+import java.util.concurrent.Future;
 
-@Entity
-(name = "cidade")
-@NamedQuery (name = "Cidade.buscarPelaLatitudeELongitude",
-query = "SELECT a FROM Cidade a WHERE latitude = :latitude AND longitude = :longitude")
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.scheduling.annotation.Async;
 
-@NamedQuery (name = "Cidade.buscarCidadePeloNome",
-query = "SELECT a FROM Cidade a WHERE nome = :nome")
+import br.usjt.ccp3anmca.usjt_ccp3anmca_jpa_hibernate_entrega.model.Cidade;
 
-@NamedQuery (name = "Cidade.buscarCidadesPeloNome",
-query = "SELECT a FROM Cidade a WHERE nome LIKE (%:nome%)")
 
-public class Cidade {
+
+public interface CidadeRepository extends JpaRepository<Cidade, Long>{
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	public List <CidadeRepository> findByLatitudeAndLongitude (String latitude, String longitude);
 	
-	public String nome;
-	private double latitude;
-	private double longitude;
+	public List <CidadeRepository> queryByNome (String nome);
+	 
+	public CidadeRepository queryByNomeIgnoreCase (String nome);
 	
-	public double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
-
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
 	
+	// MÃ©todos Assincronos
+	@Async
+	public Future < List <CidadeRepository> > findByLatitudeAndLongitudeAssi (String latitude, String longitude);
+	
+	@Async
+	public Future < List <CidadeRepository> > queryByNomeAssi (String nome);
+	
+	@Async
+	public CidadeRepository queryByNomeIgnoreCaseAss (String nome);
+	
+	//Query Explicita
+	@Query ("SELECT a FROM Cidade a WHERE a.latitude = ?1 and a.latitude = ?2")
+	public Cidade  findByLatitudeAndLongitudeExp (String latitude, String longitude);
+	
+	@Query ("SELECT a FROM Cidade a WHERE LIKE ?1% ")
+	public Cidade findByPrimeiraLetra(String nome);
+	
+	
+	@Query ("SELECT a FROM Cidade a WHERE a.nome = ?1")
+	public Future < List <CidadeRepository> > queryByNomeExp (String nome);
+	
+	
+	@Query ("SELECT a FROM Cidade a WHERE lower(a.nome) LIKE lower(?1)")
+	public CidadeRepository queryByNomeIgnoreCaseExp (String nome);
+	
+	//Named Query
+	public Cidade buscarPorLatitudeEPorLongitude (@Param ("latitude") String latitude,
+			 @Param ("longitude") String longitude);
+	
+	public Cidade buscarPorNome(@Param ("nome") String nome);
+	
+	public Cidade buscarPorNomeIgnoreCase(@Param ("nome") String nome);
+	
+	
+	
+	
+	
+	
+	
+	
+	 
+
 }
